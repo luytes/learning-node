@@ -6,6 +6,7 @@ module.exports.addNote = () => {
 }
 module.exports.add = (x,y) => {
   console.log('Adding those numbers...');
-  var sum = x + y;
-  return sum;
+  // var sum = x + y;
+  // return sum;
+  return x + y
 }
