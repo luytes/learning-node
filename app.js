@@ -26,6 +26,8 @@ const yargs = require('yargs');
 const argv = yargs.argv; //
 
 var command = process.argv[2];
+var command = argv._[0]; // same as above
+
 console.log(process.argv); // array of all the command line arguments passed in
 console.log('Command: ', command);
 // console.log('Process: ', process.argv);
