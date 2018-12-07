@@ -41,6 +41,10 @@ var getNote = (title) => {
 
 var removeNote = (title) => {
   console.log('Removing note:', title);
+  var notes = fetchNotes(); // fetch notes. stores array of all nodes
+  var filteredNotes = notes.filter((note) => note.title !== title); // if the title matches, it will not be added to filtered noted
+  saveNotes(filteredNotes); // everything except the tite that matches is saved. so it's 'removed', just not saved
+  return notes.length !== filteredNotes.length; // if not equal, return true, what we want
 };
 
 module.exports = {
