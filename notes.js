@@ -15,9 +15,13 @@ var addNote = (title, body) => { //anonymous error function
   } catch (e) { // takes error argument, runs if errors in try occurs. The programm isnt gonna work unexpectedly, even if the file doesnt exist or if it contains corrupt data.
 
   }
-  // update note
-  notes.push(note); // pass item, gets added to end of array. here we pass note object
-  fs.writeFileSync('notes-data.json', JSON.stringify(notes)); // makes new text file
+
+  var duplicateNotes = notes.filter((note) => note.title === title); // filter is an array method that takes a callback (error function) and that callback is getting called with the argument
+  if (duplicateNotes.length === 0) {
+    // update note
+    notes.push(note); // pass item, gets added to end of array. here we pass note object
+    fs.writeFileSync('notes-data.json', JSON.stringify(notes)); // makes new text file
+  }
 };
 
 var getAll = () => {
