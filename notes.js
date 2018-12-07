@@ -1,7 +1,16 @@
 console.log('starting notes.js');
+const fs = require('fs');
 
 var addNote = (title, body) => { //anonymous error function
   console.log('Adding Note:', title, body);
+  var notes = [];
+  var note = {
+    title,
+    body
+  }; // created notes array and note object
+
+  notes.push(note); // pass item, gets added to end of array. here we pass note object
+  fs.writeFileSync('notes-data.json', JSON.stringify(notes)); // makes new text file
 };
 
 var getAll = () => {
