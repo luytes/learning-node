@@ -9,6 +9,13 @@ var addNote = (title, body) => { //anonymous error function
     body
   }; // created notes array and note object
 
+  try { // try loading in the file, it this fails, it's fine.
+    var notesString = fs.readFileSync('notes-data.json');
+    notes = JSON.parse(notesString); // reads the array and parses it
+  } catch (e) { // takes error argument, runs if errors in try occurs. The programm isnt gonna work unexpectedly, even if the file doesnt exist or if it contains corrupt data.
+
+  }
+  // update note
   notes.push(note); // pass item, gets added to end of array. here we pass note object
   fs.writeFileSync('notes-data.json', JSON.stringify(notes)); // makes new text file
 };
