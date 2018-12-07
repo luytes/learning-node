@@ -1,26 +1,33 @@
 console.log('starting notes.js');
 const fs = require('fs');
 
+var fetchNotes = () => {
+  try { // try loading in the file, it this fails, it's fine.
+    var notesString = fs.readFileSync('notes-data.json');
+    return JSON.parse(notesString); // reads the array and parses it
+  } catch (e) { // takes error argument, runs if errors in try occurs. The programm isnt gonna work unexpectedly, even if the file doesnt exist or if it contains corrupt data.
+    return []; // if there no notes or if the file is not json, we return an empty array
+  }
+};
+
+var saveNotes = (notes) => {
+  fs.writeFileSync('notes-data.json', JSON.stringify(notes)); // makes new text file
+};
+
 var addNote = (title, body) => { //anonymous error function
   console.log('Adding Note:', title, body);
-  var notes = [];
+  var notes = fetchNotes();
   var note = {
     title,
     body
   }; // created notes array and note object
-
-  try { // try loading in the file, it this fails, it's fine.
-    var notesString = fs.readFileSync('notes-data.json');
-    notes = JSON.parse(notesString); // reads the array and parses it
-  } catch (e) { // takes error argument, runs if errors in try occurs. The programm isnt gonna work unexpectedly, even if the file doesnt exist or if it contains corrupt data.
-
-  }
-
-  var duplicateNotes = notes.filter((note) => note.title === title); // filter is an array method that takes a callback (error function) and that callback is getting called with the argument
+  var duplicateNotes = notes.filter((note) => note.title === title);
+  // filter is an array method that takes a callback, error function, and that callback is getting called with the argument
   if (duplicateNotes.length === 0) {
     // update note
     notes.push(note); // pass item, gets added to end of array. here we pass note object
-    fs.writeFileSync('notes-data.json', JSON.stringify(notes)); // makes new text file
+    saveNotes(notes);
+    return note; // return the note object. true if no duplicates, false if cannot push and duplicate xist
   }
 };
 
