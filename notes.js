@@ -37,6 +37,9 @@ var getAll = () => {
 
 var getNote = (title) => {
   console.log('Getting note:', title);
+  var notes = fetchNotes();
+  var fetchedNotes = notes.filter((note) => note.title === title);
+  return fetchedNotes[0]; // if first array item does not exist, else function will say note not found
 };
 
 var removeNote = (title) => {
@@ -47,11 +50,20 @@ var removeNote = (title) => {
   return notes.length !== filteredNotes.length; // if not equal, return true, what we want
 };
 
+// DRY DON'T REPEAT YOURSELF
+
+var logNote = (note) => {
+  console.log('--');
+  console.log(`Title: ${note.title}`);
+  console.log(`Body: ${note.body}`);
+};
+
 module.exports = {
   addNote, // same as addNote: addNote
   getAll,
   getNote,
-  removeNote
+  removeNote,
+  logNote
 }
 
 // in Terminal enter: node app.js add --title="secrets" --body="This is my secret"
