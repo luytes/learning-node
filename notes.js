@@ -33,6 +33,7 @@ var addNote = (title, body) => { //anonymous error function
 
 var getAll = () => {
   console.log('Getting all notes:');
+  return fetchNotes();
 };
 
 var getNote = (title) => {

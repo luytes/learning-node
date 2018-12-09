@@ -1,5 +1,3 @@
-console.log('Starting app.js');
-
 const fs = require('fs');
 //gets all the fs modules
 // const os = require('os');
@@ -42,7 +40,9 @@ if (command == 'add') {
     console.log('Note title taken');
   }
 } else if (command == 'list') {
-  notes.getAll(); // create the getAll function in notes.js
+  var allNotes = notes.getAll(); // create the getAll function in notes.js
+  console.log(`Printing ${allNotes.length} note(s)`);
+  allNotes.forEach((note) => notes.logNote(note));
 } else if (command == 'read') {
   var note = notes.getNote(argv.title);
   if (note) {
