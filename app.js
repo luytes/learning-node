@@ -20,9 +20,31 @@ const yargs = require('yargs');
 
 // fs.appendFileSync('greetings.txt',`Hello ${user.username}! You are ${notes.age}`)
 //tries to append to a file, if it doesnt exist it just creates it with the text Hello World
+const titleOptions = {
+  describe: 'Title of Note',
+  demand: true, // false by default
+  alias: 't' // shortcut
+};
+const bodyOptions = {
+  describe: 'Body of Note',
+  demand: true, // false by default
+  alias: 'b' // shortcut
+};
 
-const argv = yargs.argv; //
-
+const argv = yargs
+  .command('add','Add a new Note',{
+    title: titleOptions,
+    body: bodyOptions
+  })
+  .command('list', 'List all Notes')
+  .command('read', 'Read a note', {
+    title: titleOptions
+  })
+  .command('remove', 'Remvove a note', {
+    title: titleOptions
+  })
+  .help()
+  .argv;
 var command = process.argv[2];
 var command = argv._[0]; // same as above
 
