@@ -1,7 +1,7 @@
 console.log('Starting app: ');
 
 setTimeout(() => {
-  console.log('Inside of callback');
+  console.log('Inside of callback'); // callback function
 }, 2000); // after 2000 milliseconds
 
 setTimeout(() => {
