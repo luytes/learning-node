@@ -22,7 +22,13 @@ request({
   url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAdress}&key=` + key.constantapi(),
   json: true
 }, (error, response, body) => { // part of http, request that comes back is the body
-  console.log(`Adress: ${body.results[0].formatted_address}`);
-  console.log(`Latitude: ${body.results[0].geometry.location.lat}`);
-  console.log(`Longitude: ${body.results[0].geometry.location.lng}`);
+  if (error) {
+    console.log('Cant connect to Google servers');
+  } else if (body.status === 'ZERO_RESULTS') {
+    console.log('Unable to find address');
+  } else if (body.status === 'OK') {
+    console.log(`Adress: ${body.results[0].formatted_address}`);
+    console.log(`Latitude: ${body.results[0].geometry.location.lat}`);
+    console.log(`Longitude: ${body.results[0].geometry.location.lng}`);
+  }
 });
