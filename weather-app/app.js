@@ -1,6 +1,7 @@
-const request = require('request');
+// app.js should NOT CARE about anything, just runs the problem
+
 const fs = require('fs');
-const key = require('./constants.js');
+const geocode = require('./geocode/geocode.js')
 const yargs = require('yargs');
 const argv = yargs
   .options({
@@ -16,19 +17,14 @@ const argv = yargs
   .argv;
 
 console.log(argv);
-var encodedAdress = encodeURIComponent(argv.address); // encodeURIComponent encodes spaces as %20
-
-request({
-  url: `https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAdress}&key=` + key.constantapi(),
-  json: true
-}, (error, response, body) => { // part of http, request that comes back is the body
-  if (error) {
-    console.log('Cant connect to Google servers');
-  } else if (body.status === 'ZERO_RESULTS') {
-    console.log('Unable to find address');
-  } else if (body.status === 'OK') {
-    console.log(`Adress: ${body.results[0].formatted_address}`);
-    console.log(`Latitude: ${body.results[0].geometry.location.lat}`);
-    console.log(`Longitude: ${body.results[0].geometry.location.lng}`);
+geocode.geocodeAdress(argv.address, (errorMessage, results) => {
+  // errorMessage = string, results contain address lat and long
+  // only one at a time, either errorMessage or results
+  // weather or not the call succeeded
+  if (errorMessage) {
+    console.log(errorMessage);
+  } else {
+    console.log(JSON.stringify(results, undefined, 2));
   }
 });
+
