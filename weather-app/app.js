@@ -1,7 +1,8 @@
 // app.js should NOT CARE about anything, just runs the problem
 
 const fs = require('fs');
-const geocode = require('./geocode/geocode.js')
+const geocode = require('./geocode/geocode.js');
+const weather = require('./forecast/forecast.js');
 const yargs = require('yargs');
 const argv = yargs
   .options({
@@ -24,7 +25,14 @@ geocode.geocodeAdress(argv.address, (errorMessage, results) => {
   if (errorMessage) {
     console.log(errorMessage);
   } else {
-    console.log(JSON.stringify(results, undefined, 2));
+    console.log(results.address);
+    weather.forecastInformation(results.latitude, results.longitude, (errorMessage, weatherResults) => {
+      if (errorMessage) {
+        console.log(errorMessage);
+      } else {
+        console.log(`It's currently ${weatherResults.current_temperature}. It feels like ${weatherResults.apparent_temperature}.`);
+      }
+    });
   }
 });
 
