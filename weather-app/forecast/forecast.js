@@ -9,7 +9,7 @@ var forecastInformation = (latitude, longitude, callback) => { // callback as er
     if (!error && response.statusCode === 200) {
       callback(undefined, { // gives me back an object instead of strings
         current_temperature: (body.currently.temperature - 32) * (5/9),
-        apparent_temperature: (body.currently.apperentTemperature - 32) * (5/9),
+        apparent_temperature: (body.currently.apparentTemperature - 32) * (5/9),
         latitude: latitude,
         longitude: longitude
       });
