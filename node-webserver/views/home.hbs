@@ -6,10 +6,10 @@
   </head>
   <body>
     <!-- injecting dynamic data -->
-    <h1>{{pageTitle}}</h1>
-    <p>{{welcomeMessage}}</p>
-    <footer>
-      <p>Footer text</p>
-    </footer>
+    {{> header}}
+    <!-- screamIt takes welcomeMessage as argument -->
+    <p>{{screamIt welcomeMessage}}</p>
+    <!-- syntax for partials -->
+    {{> footer}}
   </body>
 </html>
