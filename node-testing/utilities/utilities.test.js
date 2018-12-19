@@ -2,18 +2,44 @@
 
 // On package.json ** = run through every directory and search for files with .test in it
 // write 'npm test' for testing
-
+// wrote nodemon --exec 'npm test' for live testing
+// since we have specified test-watch script in our package.json, just write 'npm run test-watch'
 const utilities = require('./utilities');
+const expect = require('expect');
 it('should add two numbers', () => {
   var results = utilities.add(33, 11);
-  if (results !== 44) {
-    throw new Error(`Expected 44, but got ${results}`);
-  }
+  expect(results).toBe(44).toBeA('number');
 });
 
 it('should square the number', () => {
   var results = utilities.square(15);
-  if (results !== 225) {
-    throw new Error(`Expected 225, but got ${results}`);
-  }
+  expect(results).toBe(225).toBeA('number');
+  // if (results !== 225) {
+  //   throw new Error(`Expected 225, but got ${results}`);
+  // }
+});
+
+it('should verify first and last name', () => {
+  var user = {age: 25,location: 'Berlin'};
+  var results = utilities.setName(user, 'Kevin Ma');
+  // objects are passed by reference, both will be updated
+  expect(results).toInclude({
+    firstName: 'Kevin',
+    lastName: 'Ma'
+  })
+});
+
+// Some Test Documentation
+it('should expect some values', () => {
+  // expect(12).toNotNe(12);
+  // for Objects:
+  // expect({name: 'Kevin'}).toEqual({name: 'Kevin'});
+  // expect([1,2,3,4]).toInclude(1);
+  expect({
+    name: 'Kevin',
+    age: 25,
+    location: 'Berlin'
+  }).toExclude({
+    age: 26
+  })
 });
