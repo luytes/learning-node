@@ -11,6 +11,21 @@ it('should add two numbers', () => {
   expect(results).toBe(44).toBeA('number');
 });
 
+it('should asyncAdd two numbers', (done) => { // done needed for async things
+  utilities.asyncAdd(4, 3, (sum) => {
+    expect(sum).toBe(7).toBeA('number');
+    done(); // done specified, a second later, callback function is called
+  })
+})
+
+it('should asyncSquare a number', (done) => { // done needed for async things
+  utilities.asyncSquare(4, (square) => {
+    expect(square).toBe(16).toBeA('number');
+    done(); // done specified, a second later, callback function is called
+  })
+})
+
+
 it('should square the number', () => {
   var results = utilities.square(15);
   expect(results).toBe(225).toBeA('number');
