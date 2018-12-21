@@ -6,32 +6,37 @@
 // since we have specified test-watch script in our package.json, just write 'npm run test-watch'
 const utilities = require('./utilities');
 const expect = require('expect');
-it('should add two numbers', () => {
-  var results = utilities.add(33, 11);
-  expect(results).toBe(44).toBeA('number');
-});
-
-it('should asyncAdd two numbers', (done) => { // done needed for async things
-  utilities.asyncAdd(4, 3, (sum) => {
-    expect(sum).toBe(7).toBeA('number');
-    done(); // done specified, a second later, callback function is called
+// "describe" groups of tasks, making test output much more readable
+describe('utilities', () => {
+  describe('#add', () => {
+    it('should add two numbers', () => {
+      var results = utilities.add(33, 11);
+      expect(results).toBe(44).toBeA('number');
+    });
   })
-})
 
-it('should asyncSquare a number', (done) => { // done needed for async things
-  utilities.asyncSquare(4, (square) => {
-    expect(square).toBe(16).toBeA('number');
-    done(); // done specified, a second later, callback function is called
+  it('should asyncAdd two numbers', (done) => { // done needed for async things
+    utilities.asyncAdd(4, 3, (sum) => {
+      expect(sum).toBe(7).toBeA('number');
+      done(); // done specified, a second later, callback function is called
+    })
   })
-})
+
+  it('should asyncSquare a number', (done) => { // done needed for async things
+    utilities.asyncSquare(4, (square) => {
+      expect(square).toBe(16).toBeA('number');
+      done(); // done specified, a second later, callback function is called
+    })
+  })
 
 
-it('should square the number', () => {
-  var results = utilities.square(15);
-  expect(results).toBe(225).toBeA('number');
-  // if (results !== 225) {
-  //   throw new Error(`Expected 225, but got ${results}`);
-  // }
+  it('should square the number', () => {
+    var results = utilities.square(15);
+    expect(results).toBe(225).toBeA('number');
+    // if (results !== 225) {
+    //   throw new Error(`Expected 225, but got ${results}`);
+    // }
+  });
 });
 
 it('should verify first and last name', () => {
