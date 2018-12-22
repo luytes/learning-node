@@ -19,29 +19,29 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
   }
   console.log('Connected to the Mongodb server!');
   // >V3: const db = client.db('TodoApp');
-  // create a collection. insert a document into mongo databse using node.js
+  // 'Todos' we want everything from the todos collection
+  // toArray gives us back a PROMISE, use THEN
+  // get callback and if things go right, print docs
+  // basic query data in find({only values with false}), if you want all: no argument
 
-  // db.collection('Todos').insertOne({
-  //   text: "Something to do",
-  //   completed: false
-  // }, (err, result) => {
-  //   if (err) {
-  //     return console.log('Unable to insert todo', err);
-  //   }
-  //   console.log(JSON.stringify(result.ops, undefined, 2));
+  // db.collection('Todos').find({
+  //   _id: new ObjectID('5c1e9480a774b4dc33f66596')
+  // }).toArray().then((docs) => {
+  //   console.log('Todos: ');
+  //   console.log(JSON.stringify(docs, undefined, 2));
+  // }, (err) => {
+  //   console.log('Unable to fetch data', err);
   // });
-
-  // db.collection('Users').insertOne({
-  //   name: "Lisa",
-  //   age: 25,
-  //   location: "Zurich"
-  // }, (err, result) => {
-  //   if (err) {
-  //     return console.log('Unable to create a user', err);
-  //   }
-  //   console.log(JSON.stringify(result.ops, undefined, 2));
-  // });
-
+  db.collection('Todos').find().count().then((count) => {
+    console.log(`Todos count: ${count}`);
+  }, (err) => {
+    console.log('Unable to fetch data', err);
+  });
+  db.collection('Users').find({name: 'Lisa'}).toArray().then((docs) => {
+    console.log(JSON.stringify(docs, undefined, 2));
+  }, (err) => {
+    console.log('Unable to fetch data', err);
+  });
   // >V3: client.close();
-  db.close();
+  // db.close();
 });
