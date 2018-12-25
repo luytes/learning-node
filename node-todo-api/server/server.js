@@ -1,82 +1,38 @@
-var mongoose = require('mongoose');
+var express = require('express');
+var bodyParser = require('body-parser');
 
-mongoose.Promise = global.Promise;
-// For mongoose:
-mongoose.connect('mongodb://localhost:27017/TodoApp');
-// statement below, mongoose waiting for the connection before making the query
+var {mongoose} = require('./db/mongoose.js');
+var {Todo} = require('./models/todo');
+var {User} = require('./models/user');
 
-// Create a model
-var Todo = mongoose.model('Todo', {
-  text: {
-    type: String,
-    required: true,
-    minlength: 1, // to block empty strings
-    trim: true // gets rid of empty space before and after text
-  },
-  completed: {
-    type: Boolean,
-    default: false
-  },
-  completedAt: {
-    type: Number,
-    default: null
-  },
+var app = express();
+// send json to our application
+app.use(bodyParser.json());
+// creating todos, SENDING JSON DATA, select json raw in postman
+app.post('/todos', (req, res) => {
+  // getting body sent from client
+  // create instance of an model
+  var todo = new Todo({
+    text: req.body.text
+  });
+  todo.save().then((doc) => {
+    res.send(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
 });
 
-// Create a user
-var User = mongoose.model('User', {
-  name: {
-    type: String,
-    required: true,
-    minlength: 1, // to block empty strings
-    trim: true // gets rid of empty space before and after text
-  },
-  email: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 1,
-  },
-  age: {
-    type: Number,
-    required: true
-  },
-  location: {
-    type: String,
-    default: 'Home'
-  },
-  createdAt: {
-    type: Number,
-    default: null
-  },
+app.listen(3000, () => {
+  console.log('Server is up');
 });
-
-// var newTodo = new Todo({
-//   text: 'Cook Dinner'
-// });
-// var newTodo = new Todo({
-//   text: 'Cook Dinner',
-//   completed: true,
-//   completedAt: 123
-// });
-
-// User, email
-var newUser = new User({
-  name: 'Kevin',
-  email: 'kevin@123.com',
-  age: 25,
-  location: 'Zurich',
-  createdAt: 123
-});
-
 // Update Mongodb
 // newTodo.save().then((doc) => {
 //   console.log('Saved to do', JSON.stringify(doc, undefined, 2));
 // }, (e) => {
 //   console.log('Unable to save the Todo');
 // });
-newUser.save().then((doc) => {
-  console.log('Saved User', JSON.stringify(doc, undefined, 2));
-}, (e) => {
-  console.log('Unable to save User', e);
-});
+// newUser.save().then((doc) => {
+//   console.log('Saved User', JSON.stringify(doc, undefined, 2));
+// }, (e) => {
+//   console.log('Unable to save User', e);
+// });
