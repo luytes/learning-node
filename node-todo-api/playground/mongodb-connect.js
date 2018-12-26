@@ -11,7 +11,7 @@ const {MongoClient, ObjectID} = require('mongodb');
 
 
 // now connect and create db with /sthsth...
-MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, db) => {
+MongoClient.connect('mongodb://127.0.0.1:27017/TodoApp', (err, db) => {
 // if you use mongoDB V3 and above use:
 // MongoClient.connect('mongodb://localhost:27017/TodoApp', (err, client) => {
   if (err) {
