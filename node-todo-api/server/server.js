@@ -8,6 +8,7 @@ var {User} = require('./models/user');
 var app = express();
 // send json to our application
 app.use(bodyParser.json());
+
 // creating todos, SENDING JSON DATA, select json raw in postman
 app.post('/todos', (req, res) => {
   // getting body sent from client
@@ -17,6 +18,14 @@ app.post('/todos', (req, res) => {
   });
   todo.save().then((doc) => {
     res.send(doc);
+  }, (e) => {
+    res.status(400).send(e);
+  });
+});
+// second route, returning all todos
+app.get('/todos', (req, res) => {
+  Todo.find().then((todos) => { // returns an array
+    res.send({todos}) // send object back instead
   }, (e) => {
     res.status(400).send(e);
   });
