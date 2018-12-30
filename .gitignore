@@ -1,0 +1,15 @@
+# Ignore node_module folder
+weather-app/node_modules
+weather-app/constants.js
+node-webserver/package.json
+node-webserver/node_modules
+node-webserver/package-lock.json
+node-webserver/server.log
+node-testing/package.json
+node-testing/node_modules
+node-testing/package-lock.json
+node-testing/server.log
+node-todo-api/node_modules
+node-todo-api/package-lock.json
+node-todo-api/server.log
+
