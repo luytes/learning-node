@@ -6,6 +6,7 @@ var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
 
 var app = express();
+const port = process.env.PORT || 3000;
 // send json to our application
 app.use(bodyParser.json());
 
@@ -55,8 +56,9 @@ app.get('/todos/:id', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('Server is up');
+app.listen(port, () => {
+  console.log(`Server is up at port ${port}`);
+  // tell heroku to "start" in package.json
 });
 // Update Mongodb
 // newTodo.save().then((doc) => {
