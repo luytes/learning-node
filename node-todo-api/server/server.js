@@ -1,14 +1,17 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var {ObjectID} = require('mongodb');
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb');
+
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
-
 var app = express();
 const port = process.env.PORT || 3000;
 // send json to our application
 app.use(bodyParser.json());
+
+// CRUD BELOW
 
 // creating todos, SENDING JSON DATA, select json raw in postman
 app.post('/todos', (req, res) => {
@@ -73,6 +76,32 @@ app.delete('/todos/:id', (req, res) => {
   }).catch((e) => {
     res.status(400).send();
   });
+});
+
+app.patch('/todos/:id', (req, res) => {
+  var id = req.params.id;
+  // in body updates will be stored. pick() takes an array of properties!
+  var body = _.pick(req.body, ['text', "completed"]); // user should be able to update text and completed
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+  // check completed value, and use value to set completedAt
+  if (_.isBoolean(body.completed) && body.completed) {
+    // set body.completedAt
+    body.completedAt = new Date().getTime();
+  } else {
+    body.completed = false;
+    body.completedAt = null;
+  }
+  // query for updating
+  Todo.findByIdAndUpdate(id, {$set: body}, {$new: true}).then((todo) => {
+    if (!todo) {
+      return res.status(404).send();
+    } // if exist, send back
+    res.send({todo});
+  }).catch((e) => {
+    res.status(400).send();
+  })
 });
 
 app.listen(port, () => {
