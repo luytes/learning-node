@@ -56,6 +56,25 @@ app.get('/todos/:id', (req, res) => {
   });
 });
 
+// GET delete id
+app.delete('/todos/:id', (req, res) => {
+  // get the id
+  var id = req.params.id;
+  // validate it
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+  // remove todo by id
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if (!todo) { // if no doc
+      return res.status(404).send();
+    } // if there is, send doc back with 200
+    res.status(200).send({todo});
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is up at port ${port}`);
   // tell heroku to "start" in package.json
