@@ -1,6 +1,59 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const _ = require('lodash');
 
+// stores schema for user (all properties)
+var UserSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    minlength: 1,
+    unique: true,
+    validate: { // use validator npm through npm install validator
+      validator: validator.isEmail,
+      // validator: (value) => {
+      //   return validator.isEmail(value);
+      // },
+      message: '{VALUE} is not a valid email'
+    }
+  },
+  password: {
+    required: true,
+    minlength: 6,
+    type: String
+  }, // tokens array of objects, where ach object is a login token, below
+  tokens: [{
+    access: {
+      type: String,
+      required: true
+    },
+    token: {
+      type: String,
+      required: true
+    }
+  }]
+});
+
+// Ovewrite method
+UserSchema.methods.toJSON = function () {
+  var user = this;
+  var userObject = user.toObject(); // takes mongoose variable and convert into regular object where only property available on document exist
+  return _.pick(userObject, ['_id', 'email']);
+};
+// instance methods
+UserSchema.methods.generateAuthToken = function () {
+  var user = this;
+  var access = 'auth';
+  var token = jwt.sign({_id: user._id.toHexString(), access}, '123456').toString();
+  // user.tokens.push({access, token});
+  user.tokens = user.tokens.concat([{access, token}]);
+  return user.save().then(() => {
+    return token;
+  });
+};
+var User = mongoose.model('User', UserSchema);
 // Create a user
 // var User = mongoose.model('User', {
 //   name: {
@@ -51,37 +104,7 @@ const validator = require('validator');
 //     default: null
 //   },
 // });
-var User = mongoose.model('User', {
-  email: {
-      type: String,
-      required: true,
-      trim: true,
-      minlength: 1,
-      unique: true,
-      validate: { // use validator npm through npm install validator
-        validator: validator.isEmail,
-        // validator: (value) => {
-        //   return validator.isEmail(value);
-        // },
-        message: '{VALUE} is not a valid email'
-      }
-    },
-  password: {
-    required: true,
-    minlength: 6,
-    type: String
-  }, // tokens array of objects, where ach object is a login token, below
-  tokens: [{
-    access: {
-      type: String,
-      required: true
-    },
-    token: {
-      type: String,
-      required: true
-    }
-  }]
-});
+
 // User, email
 // var newUser = new User({
 //   name: 'Kevin',

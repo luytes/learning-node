@@ -106,12 +106,13 @@ app.patch('/todos/:id', (req, res) => {
 });
 
 // POST /users
-
 app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   var user = new User(body);
   user.save().then((user) => {
-    res.send(user);
+    return user.generateAuthToken();
+  }).then((token) => { // prefix -x is custom header, header we are using for jwt scheme
+    res.header('x-auth', token).send(user);
   }).catch((e) => {
     res.status(400).send(e);
   });
