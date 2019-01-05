@@ -53,6 +53,25 @@ UserSchema.methods.generateAuthToken = function () {
     return token;
   });
 };
+// statics is object where everything you add onto it turns into a model method instead of intead method
+UserSchema.statics.findByToken = function (token) {
+  var User = this;
+  var decoded;
+  try {
+    decoded = jwt.verify(token, '123456');
+  } catch (e) {
+    // return new Promise((resolve, reject) => {
+    //   reject();
+    // });
+    return Promise.reject();
+  } // success
+  return User.findOne({ // query nested object properties
+    '_id': decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  });
+};
+
 var User = mongoose.model('User', UserSchema);
 // Create a user
 // var User = mongoose.model('User', {
