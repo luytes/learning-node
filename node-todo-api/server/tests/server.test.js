@@ -6,27 +6,12 @@ const {ObjectID} = require('mongodb');
 const {app} = require('./../server.js');
 // importing Todo from todo.js
 const {Todo} = require('./../models/todo.js');
+const {todos, populateTodos, users, populateUsers} = require('./seed/seed');
 
 // SEEDING
-const todos = [{
-  _id: new ObjectID(),
-  text: 'First test todo'
-}, {
-  _id: new ObjectID(),
-  text: 'Second test todo',
-  completed: true,
-  completedAt: 333
-}];
-
 // make sure db is empty
-beforeEach((done) => {
-  // remove everything
-  Todo.remove({}).then(() => {
-    // insert many, takes an array an inserts all documents into collection
-    // takes the const todos
-    return Todo.insertMany(todos);
-  }).then(() => done());
-});
+beforeEach(populateUsers);
+beforeEach(populateTodos);
 
 // DESCRIBE POST
 describe('POST /todos', () => {
