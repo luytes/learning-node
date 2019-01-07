@@ -126,6 +126,19 @@ app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 
+// POST /users/login {email, password}
+app.post('/users/login', (req, res) => {
+  var body = _.pick(req.body, ['email', 'password']);
+  // verify that user exist with that email, then get password and pass through bcrypt compare
+  User.findByCredentials(body.email, body.password).then((user) => {
+    return user.generateAuthToken().then((token) => {
+      res.header('x-auth', token).send(user);
+    });
+  }).catch((e) => {
+    res.status(400).send();
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is up at port ${port}`);
   // tell heroku to "start" in package.json
