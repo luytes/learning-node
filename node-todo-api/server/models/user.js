@@ -54,6 +54,17 @@ UserSchema.methods.generateAuthToken = function () {
     return token;
   });
 };
+UserSchema.methods.removeToken = function (token) {
+  var user = this;
+  return user.update({ // doesnt take query
+    $pull: { //   // $pull, remove items from array that match pass in updates object
+      tokens: {
+        token: token // pull any object from array with token property equal to token argument above in funcion
+      }
+    }
+  });
+};
+
 // statics is object where everything you add onto it turns into a model method instead of intead method
 UserSchema.statics.findByToken = function (token) {
   var User = this;
