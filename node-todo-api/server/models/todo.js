@@ -16,6 +16,10 @@ var Todo = mongoose.model('Todo', {
     type: Number,
     default: null
   },
+  _creator: {
+    type: mongoose.Schema.Types.ObjectId, // set up association with user
+    required: true
+  }
 });
 // var newTodo = new Todo({
 //   text: 'Cook Dinner'

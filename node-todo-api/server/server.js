@@ -16,11 +16,12 @@ app.use(bodyParser.json());
 // CRUD BELOW
 
 // creating todos, SENDING JSON DATA, select json raw in postman
-app.post('/todos', (req, res) => {
+app.post('/todos', authenticate, (req, res) => { // make private with authenticate
   // getting body sent from client
   // create instance of an model
   var todo = new Todo({
-    text: req.body.text
+    text: req.body.text,
+    _creator: req.user._id // when we make todo, x-auth token is used to fetch user and user id is stored
   });
   todo.save().then((doc) => {
     res.send(doc);
@@ -29,8 +30,10 @@ app.post('/todos', (req, res) => {
   });
 });
 // second route, returning all todos
-app.get('/todos', (req, res) => {
-  Todo.find().then((todos) => { // returns an array
+app.get('/todos', authenticate, (req, res) => {
+  Todo.find({
+    _creator: req.user._id // userOne adds todos, userTwo is not able to view them
+  }).then((todos) => { // returns an array
     res.send({todos}) // send object back instead
   }, (e) => {
     res.status(400).send(e);
@@ -38,7 +41,7 @@ app.get('/todos', (req, res) => {
 });
 
 // GET /todos/123456 with url parameter
-app.get('/todos/:id', (req, res) => {
+app.get('/todos/:id', authenticate, (req, res) => {
   var id = req.params.id;
   // res.send(req.params); // object with key value pairs (id)
   // Validate id using isValid
@@ -47,7 +50,10 @@ app.get('/todos/:id', (req, res) => {
     return res.status(404).send();
   };
   // findById, sucess
-  Todo.findById(id).then((todo) => {
+  Todo.findOne({
+    _id: id,
+    _creator: req.user._id
+  }).then((todo) => {
     // if no, send back 404 with empty body
     if (!todo) {
      return res.status(404).send();
@@ -62,7 +68,7 @@ app.get('/todos/:id', (req, res) => {
 });
 
 // GET delete id
-app.delete('/todos/:id', (req, res) => {
+app.delete('/todos/:id', authenticate, (req, res) => {
   // get the id
   var id = req.params.id;
   // validate it
@@ -70,7 +76,10 @@ app.delete('/todos/:id', (req, res) => {
     return res.status(404).send();
   }
   // remove todo by id
-  Todo.findByIdAndRemove(id).then((todo) => {
+  Todo.findOneAndRemove({
+    _id: id,
+    _creator: req.user._id
+  }).then((todo) => {
     if (!todo) { // if no doc
       return res.status(404).send();
     } // if there is, send doc back with 200
@@ -80,7 +89,7 @@ app.delete('/todos/:id', (req, res) => {
   });
 });
 
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', authenticate, (req, res) => {
   var id = req.params.id;
   // in body updates will be stored. pick() takes an array of properties!
   var body = _.pick(req.body, ['text', "completed"]); // user should be able to update text and completed
@@ -96,7 +105,10 @@ app.patch('/todos/:id', (req, res) => {
     body.completedAt = null;
   }
   // query for updating
-  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo) => {
+  Todo.findOneAndUpdate({
+    _id: id,
+    _creator: req.user._id
+  }, {$set: body}, {new: true}).then((todo) => {
     if (!todo) {
       return res.status(404).send();
     } // if exist, send back
