@@ -12,4 +12,5 @@ node-testing/server.log
 node-todo-api/node_modules
 node-todo-api/package-lock.json
 node-todo-api/server.log
+node-todo-api/server/config/config.json
 
